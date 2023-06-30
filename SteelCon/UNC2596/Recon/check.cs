@@ -25,7 +25,7 @@ namespace PoCs
 
                 ICMP_ECHO_REPLY icmpReply = new ICMP_ECHO_REPLY();
 
-                string data = "hi this is data hi this is data hi this is data hi this is data hi this is data hi this is data hi this is data hi this is data hi this is data hi this is data hi this is data hi this is data hi this is data hi this is data hi this is data hi this is d";
+                string data = "Date Buffer";
 
                 int retICMP = IcmpSendEcho(hICMP, BitConverter.ToInt32(cIP.GetAddressBytes(), 0), data,
                     (short)data.Length, ref icmpOpts, ref icmpReply, Marshal.SizeOf(icmpReply), 30);
